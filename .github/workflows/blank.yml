@@ -13,7 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
+      id: checkout
     - uses: actions/checkout@v5
+      if: false
       with:
+        path: semmle-code
         repository: github/semmle-code
         submodules: true
+
+    - run: echo ${{ steps.checkout.outputs.path }}
