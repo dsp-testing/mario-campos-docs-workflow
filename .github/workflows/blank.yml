@@ -41,9 +41,7 @@ jobs:
       # -b: Specifies the builder to use. In this case, 'dirhtml' generates HTML files in a directory structure.
       # -E: Ignores cached files, forces to re-read all source files from disk.
       # -W: Turn warnings into errors.
-      run: |
-        cp -R "$GITHUB_WORKSPACE/.spark/semmle-code/ql/docs/codeql" src
-        sphinx-build -aEWb dirhtml src docs
+      run: sphinx-build -aEWb dirhtml src docs
 
     - name: Configure git user
       run: |
