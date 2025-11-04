@@ -1,0 +1,24 @@
+name: Setup sphinx
+description: Download and install Sphinx.
+
+outputs:
+  sphinx-venv-path:
+    description: Path to the Sphinx virtual environment.
+    value: ${{ steps.setup-sphinx-venv.outputs.sphinx-venv-path }}
+
+runs:
+  using: composite
+  steps:
+  - name: Setup sphinx environment
+    id: setup-sphinx-venv
+    run: |
+      SPHINX_VENV_PATH="$RUNNER_TEMP/sphinx-venv"
+      python3 -m venv "$SPHINX_VENV_PATH"
+      echo "sphinx-venv-path=$SPHINX_VENV_PATH" >> $GITHUB_OUTPUT
+    shell: bash
+
+  - name: Install sphinx
+    run: |
+      . '${{ steps.setup-sphinx.venv.outputs.sphinx-venv-path }}/venv/bin/activate'
+      pip install -r requirements.txt
+    shell: bash
