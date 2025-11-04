@@ -1,0 +1,20 @@
+name: Setup spark
+description: Download and install Spark, the CodeQL docs tool.
+
+inputs:
+  version:
+    description: version number
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Download spark executable
+    run: >
+      wget --output-document=spark
+      'https://github.com/opengrep/opengrep/releases/download/${{ inputs.version }}/opengrep_manylinux_x86' # TODO: replace download URL
+    shell: bash
+
+  - name: Install spark executable
+    run: install --mode=0755 ./spark /usr/local/bin
+    shell: bash
