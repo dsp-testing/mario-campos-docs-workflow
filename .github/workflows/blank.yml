@@ -21,4 +21,4 @@ jobs:
         repository: github/semmle-code
         submodules: true
 
-    - run: echo ${{ steps.checkout.outputs.path }}
+    - run: spark --help
