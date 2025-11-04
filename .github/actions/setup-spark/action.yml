@@ -2,8 +2,8 @@ name: Setup spark
 description: Download and install Spark, the CodeQL docs tool.
 
 inputs:
-  version:
-    description: version number
+  spark-version:
+    description: spark version number
     required: true
 
 runs:
