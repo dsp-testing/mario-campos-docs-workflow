@@ -8,21 +8,57 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
       id: checkout
+
     - uses: actions/checkout@v5
-      if: false
       with:
-        path: semmle-code
         repository: github/semmle-code
+        path: .spark/semmle-code
         submodules: true
 
-    - uses: ./.github/actions/setup-spark@main
+    - name: Setup spark
+      uses: ./.github/actions/setup-spark
       with:
-        spark-version: v1.11.5
+        spark-version: v1.11.5 #TODO: replace version number
 
-    - run: spark --help
+    - name: Generate ReStructuredText documentation from Markdown documentation
+      run: spark --cache-path="$GITHUB_WORKSPACE" sitedocs
+
+    - name: Setup sphinx
+      uses: ./.github/actions/setup-sphinx
+
+    - name: Generate HTML documentation from ReStructuredText documentation
+      # -a: Generates output for all files; without this option only output for new and changed files is generated.
+      # -b: Specifies the builder to use. In this case, 'dirhtml' generates HTML files in a directory structure.
+      # -E: Ignores cached files, forces to re-read all source files from disk.
+      # -W: Turn warnings into errors.
+      run: |
+        cp -R "$GITHUB_WORKSPACE/.spark/semmle-code/ql/docs/codeql" src
+        sphinx-build -aEWb dirhtml src docs
+
+    - name: Configure git user
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    
+    - name: Commit and push changes
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        git checkout -b "update-docs-$GITHUB_RUN_ID"
+        git add docs src
+        git commit -m "Update docs for run $GITHUB_RUN_ID" || (echo "No changes to commit" && exit 0)
+        gh pr create \
+          --base main \
+          --head "update-docs-$GITHUB_RUN_ID" \
+          --title "Update docs for run $GITHUB_RUN_ID" \
+          --body "This PR was created automatically by the GitHub Actions workflow."

@@ -12,7 +12,7 @@ runs:
   - name: Download spark executable
     run: >
       wget --output-document=spark
-      'https://github.com/opengrep/opengrep/releases/download/${{ inputs.version }}/opengrep_manylinux_x86' # TODO: replace download URL
+      'https://github.com/opengrep/opengrep/releases/download/${{ inputs.spark-version }}/opengrep_manylinux_x86' # TODO: replace download URL
     shell: bash
 
   - name: Install spark executable
