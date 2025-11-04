@@ -21,7 +21,7 @@ jobs:
         repository: github/semmle-code
         submodules: true
 
-    - uses: .github/actions/setup-spark@main
+    - uses: ./.github/actions/setup-spark@main
       with:
         spark-version: v1.11.5
 
