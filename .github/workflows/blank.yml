@@ -33,6 +33,14 @@ jobs:
     - name: Generate ReStructuredText documentation from Markdown documentation
       run: spark --cache-path="$GITHUB_WORKSPACE" sitedocs
 
+    - name: Check for changes to src/
+      run: |
+        if git diff --quiet src
+        then
+          echo "No changes detected in src/; nothing to deploy."
+          exit 0
+        fi
+
     - name: Setup sphinx
       uses: ./.github/actions/setup-sphinx
 
@@ -54,7 +62,7 @@ jobs:
       run: |
         git checkout -b "update-docs-$GITHUB_RUN_ID"
         git add docs src
-        git commit -m "Update docs for run $GITHUB_RUN_ID" || (echo "No changes to commit" && exit 0)
+        git commit -m "Update docs for run $GITHUB_RUN_ID"
         gh pr create \
           --base main \
           --head "update-docs-$GITHUB_RUN_ID" \
