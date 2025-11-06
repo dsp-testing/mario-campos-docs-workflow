@@ -11,10 +11,10 @@ runs:
   steps:
   - name: Download spark executable
     run: >
-      wget --output-document=spark
-      'https://github.com/opengrep/opengrep/releases/download/${{ inputs.spark-version }}/opengrep_manylinux_x86' # TODO: replace download URL
+      wget --output-document=spark.zip
+      'https://github.com/github/codeql-spark/actions/runs/19148045154/artifacts/4491697349' # TODO: use inputs.spark-version
     shell: bash
 
-  - name: Install spark executable
-    run: install --mode=0755 ./spark /usr/local/bin
+  - name: Unzip spark download
+    run: unzip spark.zip
     shell: bash
