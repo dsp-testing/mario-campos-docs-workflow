@@ -19,18 +19,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Checkout semmle-code
-      uses: actions/checkout@v5
-      with:
-        repository: github/semmle-code
-        path: semmle-code
-        submodules: true
-
-    - name: Create Spark cache from semmle-code
-      run: |
-        mv semmle-code/ql .spark/codeql
-        mv semmle-code/odasa-buildutils/codeql-resources/CHANGELOG.md .spark/cli.md
-
     - name: Setup spark
       uses: ./.github/actions/setup-spark
       with:
