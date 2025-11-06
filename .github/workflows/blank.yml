@@ -44,10 +44,10 @@ jobs:
       uses: ./.github/actions/setup-sphinx
 
     - name: Generate HTML documentation from ReStructuredText documentation
-      # -a: Generates output for all files; without this option only output for new and changed files is generated.
-      # -b: Specifies the builder to use. In this case, 'dirhtml' generates HTML files in a directory structure.
-      # -E: Ignores cached files, forces to re-read all source files from disk.
-      # -W: Turn warnings into errors.
+      # -a, --write-all       : Generates output for all files; without this option only output for new and changed files is generated.
+      # -b, --builder         : Specifies the builder to use. In this case, 'dirhtml' generates HTML files in a directory structure.
+      # -E, --fresh-env       : Ignores cached files, forces to re-read all source files from disk.
+      # -W, --fail-on-warning : Turn warnings into errors.
       run: sphinx-build -aEWb dirhtml src docs
 
     - name: Configure git user
