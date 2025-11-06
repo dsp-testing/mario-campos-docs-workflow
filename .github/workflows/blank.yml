@@ -19,22 +19,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Checkout codeql
+    - name: Checkout semmle-code
       uses: actions/checkout@v5
-      with:
-        repository: github/codeql
-        path: .spark/codeql
-    
-    - name: Checkout codeql-cli-binaries
-      uses: actions/checkout@v5
-      with:
-        repository: github/codeql-cli-binaries
-        path: .spark/codeql-cli-binaries
-
-    - uses: actions/checkout@v5
       with:
         repository: github/semmle-code
-        path: .spark/semmle-code
+        path: semmle-code
+        submodules: true
+
+    - name: Create Spark cache from semmle-code
+      run: |
+        mv semmle-code/ql .spark/codeql
+        mv semmle-code/odasa-buildutils/codeql-resources/CHANGELOG.md .spark/cli.md
 
     - name: Setup spark
       uses: ./.github/actions/setup-spark
@@ -42,7 +37,10 @@ jobs:
         spark-version: v1.11.5 #TODO: replace version number
 
     - name: Generate ReStructuredText documentation from Markdown documentation
-      run: spark --cache-path="$GITHUB_WORKSPACE" sitedocs
+      run: spark sitedocs
+
+    - name: Move generated ReStructuredText documentation to src/
+      run: mv .spark/codeql/docs/codeql src
 
     - name: Check for changes to src/
       run: |
