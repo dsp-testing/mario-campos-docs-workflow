@@ -16,14 +16,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-      id: checkout
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Checkout codeql
+      uses: actions/checkout@v5
+      with:
+        repository: github/codeql
+        path: .spark/codeql
+    
+    - name: Checkout codeql-cli-binaries
+      uses: actions/checkout@v5
+      with:
+        repository: github/codeql-cli-binaries
+        path: .spark/codeql-cli-binaries
 
     - uses: actions/checkout@v5
       with:
         repository: github/semmle-code
         path: .spark/semmle-code
-        submodules: true
 
     - name: Setup spark
       uses: ./.github/actions/setup-spark
