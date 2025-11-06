@@ -24,10 +24,13 @@ jobs:
       with:
         spark-version: v1.11.5 #TODO: replace version number
 
+    - name: Spark version
+      run: ./spark --version
+
     - name: Generate ReStructuredText documentation from Markdown documentation
       env:
         GH_TOKEN: ${{ github.token }}
-      run: spark sitedocs
+      run: ./spark sitedocs
 
     - name: Move generated ReStructuredText documentation to src/
       run: mv .spark/codeql/docs/codeql src
