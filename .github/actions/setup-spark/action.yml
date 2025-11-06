@@ -11,10 +11,7 @@ runs:
   steps:
   - name: Download spark executable
     run: >
+      exit 0 &&
       wget --output-document=spark.zip
       'https://github.com/github/codeql-spark/actions/runs/19148045154/artifacts/4491697349' # TODO: use inputs.spark-version
-    shell: bash
-
-  - name: Unzip spark download
-    run: unzip spark.zip
     shell: bash
