@@ -75,4 +75,5 @@ jobs:
           --base main \
           --head "update-docs-$GITHUB_RUN_ID" \
           --title "Update docs for run $GITHUB_RUN_ID" \
+          --reviewer "$GITHUB_ACTOR" \
           --body "This PR was created automatically by the GitHub Actions workflow."
