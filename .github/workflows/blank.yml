@@ -22,7 +22,7 @@ jobs:
     - name: Setup spark
       uses: ./.github/actions/setup-spark
       with:
-        spark-version: v1.11.5 #TODO: replace version number
+        spark-version: 1.0.0
 
     - name: Spark version
       run: ./spark --version
