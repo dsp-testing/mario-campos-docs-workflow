@@ -1,12 +1,18 @@
-name: CI
+name: 1. Get CodeQL docs updates
 
 on:
+  # TODO: remove these when bringing to github/codeql-docs.
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
   workflow_dispatch:
+    inputs:
+      download_branch:
+        description: The branch in github/semmle-code to download the artifacts from
+        required: true
+        default: codeql-cli-X.X.X
 
 permissions:
   contents: write
@@ -57,21 +63,19 @@ jobs:
       # -W, --fail-on-warning : Turn warnings into errors.
       run: sphinx-build -aEWb dirhtml src docs/docs
 
-    - name: Configure git user
+    - name: Commit changes as github-actions bot
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    
-    - name: Commit and push changes
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
         git checkout -b "update-docs-$GITHUB_RUN_ID"
         git add docs src
-        git commit -m "Update docs for run $GITHUB_RUN_ID"
-        gh pr create \
-          --base main \
-          --head "update-docs-$GITHUB_RUN_ID" \
-          --title "Update docs for run $GITHUB_RUN_ID" \
-          --reviewer "$GITHUB_ACTOR" \
+        git commit --message "Update docs for run $GITHUB_RUN_ID"
+
+    - name: Create pull request
+      run: >
+        gh pr create
+          --base main
+          --head "update-docs-$GITHUB_RUN_ID"
+          --title "Update docs for run $GITHUB_RUN_ID"
+          --reviewer "$GITHUB_ACTOR"
           --body "This PR was created automatically by the GitHub Actions workflow."
