@@ -24,9 +24,9 @@ jobs:
       with:
         spark-version: 1.0.0
 
-    - name: Spark version
-      run: ./spark --version
-
+    # NOTE: The spark executable is placed in $GITHUB_WORKSPACE by the
+    # setup-spark action. Ideally, `spark` would be dropped into the PATH,
+    # but the "templates" directory must be in the CWD for spark to find it.
     - name: Generate ReStructuredText documentation from Markdown documentation
       env:
         GH_TOKEN: ${{ github.token }}
