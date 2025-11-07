@@ -9,13 +9,13 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Install libpcre2-dev dependency
-    run: sudo apt-get install -y libpcre2-dev
+  - name: Install libpcre3
+    run: sudo apt install libpcre16-3 libpcre3 libpcre3-dev libpcre32-3 libpcrecpp0v5
     shell: bash
 
   - name: Download spark executable
+    if: false
     run: >
-      exit 0 &&
       wget --output-document=spark.zip
       'https://github.com/github/codeql-spark/actions/runs/19148045154/artifacts/4491697349' # TODO: use inputs.spark-version
     shell: bash
