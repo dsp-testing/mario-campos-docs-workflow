@@ -5,5 +5,5 @@ runs:
   using: composite
   steps:
   - name: Install sphinx
-    run: sudo pip install --requirement "$GITHUB_ACTION_PATH/requirements.txt"
+    run: sudo apt install sphinx-doc
     shell: bash
