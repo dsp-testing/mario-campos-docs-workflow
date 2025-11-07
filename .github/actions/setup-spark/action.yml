@@ -13,14 +13,10 @@ runs:
     run: sudo apt install libpcre16-3 libpcre3 libpcre3-dev libpcre32-3 libpcrecpp0v5
     shell: bash
 
-  - name: Download spark executable
-    run: >
-      wget --output-document=spark.zip
-      'https://github.com/dsp-testing/mario-campos-docs-workflow/releases/download/v${{ inputs.spark-version }}/spark-Linux-X64.zip'
-    shell: bash
-    working-directory: ${{ runner.temp }}
-  
-  - name: Unzip spark executable
-    run: unzip spark.zip -d "$GITHUB_WORKSPACE"
-    shell: bash
-    working-directory: ${{ runner.temp }}
+  - name: Download spark
+    uses: ./.github/actions/get-workflow-artifact
+    with:
+      token: ${{ secrets.CODEQL_CI_TOKEN }} # TODO: Replace with another PAT with access to github/codeql-spark if needed.
+      repo: github/codeql-spark
+      workflow: build.yml
+      artifact-name: spark-Linux-X64
