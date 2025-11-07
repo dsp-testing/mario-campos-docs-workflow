@@ -14,8 +14,13 @@ runs:
     shell: bash
 
   - name: Download spark executable
-    if: false
     run: >
       wget --output-document=spark.zip
-      'https://github.com/github/codeql-spark/actions/runs/19148045154/artifacts/4491697349' # TODO: use inputs.spark-version
+      'https://github.com/dsp-testing/mario-campos-docs-workflow/releases/download/v${{ inputs.spark-version }}/spark-Linux-X64.zip'
     shell: bash
+    working-directory: ${{ runner.temp }}
+  
+  - name: Unzip spark executable
+    run: unzip spark.zip -d "$GITHUB_WORKSPACE"
+    shell: bash
+    working-directory: ${{ runner.temp }}

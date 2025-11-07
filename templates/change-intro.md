@@ -1,2 +1,0 @@
-# CodeQL change logs
-
