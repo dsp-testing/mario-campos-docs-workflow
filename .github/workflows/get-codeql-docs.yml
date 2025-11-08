@@ -26,7 +26,7 @@ jobs:
       BRANCH_NAME: "codeql-docs-update/${{ github.event.inputs.download_branch }}/${{ github.run_id }}"
 
     steps:
-    - name: Checkout
+    - name: Checkout codeql-docs-staging repo
       uses: actions/checkout@v4.2.2
 
     - name: Setup spark
