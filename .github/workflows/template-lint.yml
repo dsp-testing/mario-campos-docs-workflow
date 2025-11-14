@@ -41,6 +41,8 @@ jobs:
         }
         EOF
 
+        go mod init temp-validator
+        go get golang.org/x/mod/semver
         go build semver-is-valid.go
 
     - name: Get all changed template files
