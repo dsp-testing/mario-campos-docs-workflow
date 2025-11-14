@@ -1,0 +1,57 @@
+name: Lint Workflow Templates
+
+on:
+  pull_request:
+    paths:
+    - ts/workflows/versions/v*.codeql.template
+    branches:
+    - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-slim
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.21'
+
+    - name: Create semver-is-valid to validate workflow template versions
+      run: |
+        cat << 'EOF' > semver-is-valid.go
+        package main
+
+        import "fmt"
+        import "os"
+        import "golang.org/x/mod/semver"
+        
+        func main() {
+          version := os.Args[1]
+          fmt.Printf("Validating semantic version number '%s'...", version)
+          if !semver.IsValid(version) {
+            panic("Template version format is invalid; expected format is vNN (e.g., v48)")
+          }
+          fmt.Println(" valid")
+        }
+        EOF
+
+        go build semver-is-valid.go
+
+    - name: Get all changed template files
+      id: changed-files
+      uses: tj-actions/changed-files@v47
+      with:
+        files: '**/v*.codeql.template'
+
+    - name: Validate workflow template versions
+      run: |
+        for f in ${{ steps.changed-files.outputs.all_changed_files }}
+        do
+          ./semver-is-valid $(basename "$f" .codeql.template)
+        done
