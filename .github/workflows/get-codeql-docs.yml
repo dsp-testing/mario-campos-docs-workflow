@@ -22,6 +22,7 @@ jobs:
         sudo apt install libpcre16-3 libpcre3 libpcre3-dev libpcre32-3 libpcrecpp0v5
 
     - name: Download spark
+      working-directory: ${{ runner.temp }}
       env:
         # TODO: Use a PAT with sufficient permissions to github/codeql-spark.
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,9 +31,8 @@ jobs:
         gh -R dsp-testing/mario-campos-docs-workflow release download v1.0.0
         unzip "spark-$RUNNER_OS-$RUNNER_ARCH.zip"
 
-    # NOTE: The spark executable is placed in $GITHUB_WORKSPACE because
-    # the "templates" directory must be in the CWD for spark to find it.
     - name: Generate ReStructuredText documentation from Markdown documentation
+      working-directory: ${{ runner.temp }}
       env:
         # TODO: Use a PAT with sufficient permissions to github/codeql-owasp-top10-coverage.
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
 
     - name: Check for changes to CodeQL docs
       id: changes
-      working-directory: .spark/codeql
+      working-directory: ${{ runner.temp }}/.spark/codeql
       run: |
         if git diff --quiet
         then
@@ -52,7 +52,7 @@ jobs:
 
     - name: Create PR
       if: steps.changes.outputs.changed == 'true'
-      working-directory: .spark/codeql
+      working-directory: ${{ runner.temp }}/.spark/codeql
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NEW_BRANCH_NAME: "codeql-docs-update/${{ github.event.inputs.codeql_branch }}/${{ github.run_id }}"
