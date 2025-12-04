@@ -59,22 +59,6 @@ jobs:
           exit 0
         fi
 
-    - name: Setup sphinx
-      uses: ./.github/actions/setup-sphinx
-
-    # TODO: Remove -a flag. Only changed files should be rebuilt for performance.
-    #       We will need to modify checked-out files' timestamps to match their
-    #       last commit time so that Sphinx can detect which files have changed.
-    # TODO: Remove -E flag. The Sphinx cache (docs/docs/.doctrees) should be
-    #       preserved between runs for performance. And there shouldn't be any risk
-    #       to commiting those files to the repository in docs/docs/.doctrees.
-    - name: Generate HTML documentation from ReStructuredText documentation
-      # -a, --write-all       : Generates output for all files; without this option only output for new and changed files is generated.
-      # -b, --builder         : Specifies the builder to use. In this case, 'dirhtml' generates HTML files in a directory structure.
-      # -E, --fresh-env       : Ignores cached files, forces to re-read all source files from disk.
-      # -W, --fail-on-warning : Turn warnings into errors.
-      run: sphinx-build -aEWb dirhtml src docs/docs
-
     - name: Commit changes as github-actions bot
       run: |
         git checkout -b "$BRANCH_NAME"
