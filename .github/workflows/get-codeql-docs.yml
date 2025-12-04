@@ -1,12 +1,6 @@
 name: 1. Get CodeQL docs updates
 
 on:
-  # TODO: remove these when bringing to github/codeql-docs.
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
   workflow_dispatch:
     inputs:
       codeql_branch:
